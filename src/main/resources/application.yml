@@ -1,1 +1,32 @@
+server:
+  port: 9090
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${DISCOVERY_URI}
+  instance:
+    hostname: ${HOST_NAME:gateway}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: usersApiModule
+          uri: lb://${TESTS_SERVICE:USER-TEST-PROJECT}
+          predicates:
+            - Path=/users/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+    org.springframework.http.server.reactive: trace
+    org.springframework.web.reactive: trace
+    reactor.netty: trace
+    org.springframework.boot.autoconfigure.web: trace
